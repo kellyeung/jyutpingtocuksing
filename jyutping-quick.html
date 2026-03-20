@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>粵拼速成查碼</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f5f0e8;
+    --red: #c0392b;
+    --gold: #b8860b;
+    --dim: #8a8070;
+    --card: #fffdf7;
+    --border: #d4c9b0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Serif TC', serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 31px, #d4c9b022 31px, #d4c9b022 32px),
+      repeating-linear-gradient(90deg, transparent, transparent 31px, #d4c9b011 31px, #d4c9b011 32px);
+  }
+
+  header {
+    width: 100%;
+    text-align: center;
+    padding: 48px 24px 24px;
+    border-bottom: 2px solid var(--ink);
+    background: var(--card);
+    box-shadow: 0 2px 0 var(--gold);
+    position: relative;
+  }
+
+  header::before {
+    content: '粵';
+    position: absolute;
+    left: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--red);
+    opacity: 0.12;
+    line-height: 1;
+  }
+  header::after {
+    content: '碼';
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--red);
+    opacity: 0.12;
+    line-height: 1;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: var(--ink);
+  }
+
+  .subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--dim);
+    letter-spacing: 0.2em;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 760px;
+    padding: 40px 24px 60px;
+  }
+
+  .input-section {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 2px;
+    box-shadow: 4px 4px 0 var(--border);
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.18em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    font-family: 'Space Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--ink);
+    padding: 8px 0;
+    outline: none;
+    caret-color: var(--red);
+    letter-spacing: 0.1em;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]::placeholder {
+    color: var(--border);
+    font-weight: 400;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--red);
+  }
+
+  .hint {
+    font-size: 0.68rem;
+    color: var(--dim);
+    font-family: 'Space Mono', monospace;
+    margin-top: 8px;
+    letter-spacing: 0.05em;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .char-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 2px;
+    box-shadow: 3px 3px 0 var(--border);
+    padding: 20px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    animation: fadeIn 0.25s ease;
+    transition: box-shadow 0.15s, transform 0.15s;
+    cursor: default;
+  }
+
+  .char-card:hover {
+    box-shadow: 5px 5px 0 var(--gold);
+    transform: translate(-1px, -1px);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .char-display {
+    font-size: 3.2rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+
+  .char-jyutping {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--red);
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .quick-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .quick-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    text-transform: uppercase;
+  }
+
+  .quick-keys {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 3px;
+    box-shadow: 0 2px 0 #00000066;
+    letter-spacing: 0;
+    transition: background 0.15s;
+  }
+
+  .key.radical-key {
+    background: var(--red);
+  }
+
+  .quick-code-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+  }
+
+  .no-result {
+    text-align: center;
+    padding: 60px 0;
+    color: var(--dim);
+    grid-column: 1 / -1;
+  }
+
+  .no-result .big {
+    font-size: 3rem;
+    opacity: 0.3;
+    margin-bottom: 12px;
+  }
+
+  .no-result p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+
+  .section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--dim);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  footer {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--dim);
+    text-align: center;
+    padding: 24px;
+    letter-spacing: 0.1em;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>粵拼速成查碼</h1>
+  <p class="subtitle">Jyutping → Quick (倉頡速成) Lookup</p>
+</header>
+
+<div class="container">
+  <div class="input-section">
+    <label>輸入粵拼 · Enter Jyutping</label>
+    <input type="text" id="jyutInput" placeholder="e.g. gong, jyu, soeng..." autocomplete="off" spellcheck="false">
+    <p class="hint">聲調可以省略 · Tones optional · 例: gong2 或 gong</p>
+  </div>
+
+  <div id="sectionTitle" class="section-title" style="display:none"></div>
+  <div class="results-grid" id="results"></div>
+</div>
+
+<footer>速成碼資料來源：倉頡第五代 · Quick = First + Last 倉頡碼</footer>
+
+<script>
+// ─── Cangjie radical names ────────────────────────────────────────────────────
+const RADICAL = {
+  a:'日',b:'月',c:'金',d:'木',e:'水',f:'火',g:'土',h:'竹',i:'戈',j:'十',
+  k:'大',l:'中',m:'一',n:'弓',o:'人',p:'心',q:'手',r:'口',s:'尸',t:'廿',
+  u:'山',v:'女',w:'田',x:'難',y:'卜',z:'重'
+};
+
+// ─── Comprehensive jyutping → [char, cangjie_code] data ──────────────────────
+// cangjie_code is full cangjie; quick = first + last letter
+const DATA = {
+  // A
+  aa:   [['呀','rmnr'],['啊','rmr'],['阿','mfnl']],
+  aai:  [['捱','qmgl']],
+  aan:  [['晏','amks']],
+  aang: [['罌','wrm']],
+  aap:  [['鴨','hnhaf']],
+  aat:  [['壓','mks']],
+  aau:  [['拗','qhl']],
+  ai:   [['愛','bbpe'],['哎','rmo'],['捱','qmgl']],
+  ak:   [['呃','rmnk']],
+  am:   [['暗','amob'],['含','omr']],
+  an:   [['晏','amks'],['按','qmks']],
+  ang:  [['罌','wrm']],
+  ap:   [['鴨','hnhaf'],['押','rhjl']],
+  at:   [['壓','mks'],['乙','nu']],
+  au:   [['嘔','rum'],['歐','srmno'],['偶','olmob']],
+  // B
+  baa:  [['霸','tlmc'],['爸','chmo'],['把','qpu'],['吧','rpu']],
+  baai:[['拜','hqmf'],['敗','hqok']],
+  baan:[['班','mgmmv'],['辦','ymiij'],['板','dmmf']],
+  baang:[['繃','vmgn'],['棒','djii']],
+  baat:[['八','co'],['擺','qmgf']],
+  baau:[['抱','qpu'],['飽','oinb'],['豹','phyf'],['爆','oahf']],
+  bai: [['幣','lmob'],['弊','tmob'],['閉','anm'],['被','lean'],['必','plh'],['畢','waj'],['鼻','hthl'],['比','pp'],['髀','mmpp']],
+  ban: [['貧','opbc'],['賓','jmbc'],['斌','yfibt'],['繽','vfpt'],['奔','kqo'],['笨','hod'],['本','dq']],
+  bang:[['朋','bb'],['碰','mrbb'],['崩','umgg'],['繃','vmgn'],['蹦','rmuh']],
+  bat: [['不','mf'],['筆','hpql'],['必','plh'],['畢','waj'],['鉢','chjl'],['撇','qyp']],
+  bau: [['包','por'],['鮑','nfpor'],['爆','oahf'],['抱','qpu'],['報','gqno']],
+  bei: [['飛','nohto'],['悲','llp'],['杯','dmno'],['卑','hjl'],['碑','mrhjl'],['俾','opo'],['啤','rhjl'],['比','pp'],['鼻','hthl'],['被','lean'],['幣','lmob'],['閉','anm']],
+  bik: [['逼','ywod'],['壁','mrmt'],['碧','mahq'],['辟','yst']],
+  bin: [['邊','ymnl'],['鞭','tjln'],['編','vjln'],['便','ojln'],['遍','yjln'],['扁','sjln']],
+  bing:[['冰','ime'],['兵','nmo'],['丙','mob'],['病','kmob'],['餅','oinmo'],['並','tt']],
+  bit: [['別','rsln'],['鱉','nfhge'],['蹩','taqf']],
+  biu: [['標','dhtc'],['彪','phyok'],['鑣','crgbc']],
+  bok: [['薄','tieii'],['搏','qrgbc'],['剝','rbln'],['博','jansj']],
+  bong:[['幫','jslb'],['磅','mrgsb'],['傍','ojsb'],['梆','djsb']],
+  bou: [['布','klb'],['寶','jcf'],['報','gqno'],['保','ohs'],['鋪','cqmb']],
+  bui: [['杯','dmno'],['背','lob'],['倍','oprs'],['輩','lqwj'],['貝','boc']],
+  bun: [['半','fq'],['笨','hod'],['棒','djii'],['奔','kqo']],
+  bung:[['崩','umgg'],['繃','vmgn']],
+  but: [['撥','qeee'],['勃','jbks'],['孛','jd']],
+  // C
+  caa: [['查','efd'],['差','tle']],
+  caai:[['猜','khyo'],['拆','qhl'],['猜','khyo']],
+  caam:[['攙','qogy']],
+  caan:[['餐','oiav'],['殘','mnhne'],['鏟','cekg']],
+  caang:[['撐','qbkq']],
+  caat:[['擦','qtle'],['察','jtle']],
+  caau:[['炒','fhl'],['抄','fq']],
+  cai: [['齊','yyj'],['妻','jlv'],['洗','eycq']],
+  cam: [['侵','ohlo'],['尋','bqu']],
+  can: [['親','ysmd'],['陳','nlwl'],['秦','kqhd'],['趁','gohr']],
+  cang:[['層','smmr'],['撐','qbkq']],
+  cap: [['接','qod'],['揸','qjhl']],
+  cat: [['七','lv'],['叱','rhl']],
+  cau: [['就','yksb'],['抽','qlwl'],['臭','hgku'],['愁','pfd'],['仇','opi']],
+  ce:  [['車','jj'],['扯','qsj']],
+  cek: [['尺','so']],
+  ceng:[['情','pqmb'],['層','smmr']],
+  ci:  [['詞','yvii'],['次','ioo'],['此','ypo'],['磁','mrpo'],['刺','mjln']],
+  cik: [['尺','so'],['刺','mjln']],
+  cin: [['前','tbln'],['錢','cqis'],['千','hj'],['淺','eqis']],
+  cing:[['清','eqmb'],['情','pqmb'],['請','yqmb'],['稱','hdnf']],
+  cip: [['貼','bcrj'],['接','qod']],
+  cit: [['切','psr'],['徹','hoosk']],
+  ciu: [['超','gjoo'],['朝','ajmb'],['焦','ogku'],['蕉','tgku']],
+  coe: [['脆','bbhr']],
+  coeng:[['槍','dinn'],['搶','qinn'],['牆','mginn'],['唱','rahu']],
+  coek:[['雀','ogyi']],
+  coi: [['財','bcii'],['彩','bdhv'],['才','dh'],['採','qbdhv'],['菜','tbdhv']],
+  cok: [['錯','cham'],['戳','ilhni']],
+  cong:[['倉','oiin'],['蒼','toiin'],['創','oiln'],['窗','fucr']],
+  cou: [['粗','fdj'],['草','tao'],['操','qrrd'],['糙','fdrrd']],
+  cyun:[['全','omc'],['泉','eme'],['傳','ojii'],['串','lbl'],['穿','kcmv'],['篡','hobuc']],
+  cyut:[['撮','qbbr'],['啜','rbkr'],['絕','vfbk']],
+  // D
+  daa: [['打','qhj'],['大','kj']],
+  daai:[['帶','jwlb'],['待','hoii'],['戴','jmsn'],['代','op'],['袋','opv']],
+  daam:[['擔','qam'],['膽','bam'],['淡','efd'],['談','ifd'],['貪','phc']],
+  daan:[['單','rrtj'],['但','oas'],['彈','nftj'],['蛋','jbu'],['旦','aml'],['誕','ytv']],
+  daap:[['答','hrj'],['達','ydmq'],['搭','qrrd']],
+  daat:[['達','ydmq'],['奪','bkso']],
+  daau:[['斗','yj'],['兜','bclau'],['豆','mtor'],['鬥','kkknk']],
+  dai: [['低','ojws'],['弟','nolh'],['第','hnlh'],['題','jphml'],['底','iyws'],['抵','qyws'],['帝','yblb']],
+  dak: [['得','hqkp'],['德','hojtc'],['的','pty']],
+  dam: [['擔','qam'],['淡','efd']],
+  dan: [['旦','aml'],['但','oas'],['彈','nftj']],
+  dang:[['等','hgni'],['登','noma'],['燈','onom'],['鄧','nomvl']],
+  dap: [['答','hrj'],['搭','qrrd']],
+  dat: [['突','mck'],['達','ydmq']],
+  dau: [['兜','bclau'],['豆','mtor'],['鬥','kkknk'],['逗','ymor']],
+  dei: [['地','gpd'],['堤','ghml']],
+  deng:[['等','hgni'],['燈','onom']],
+  di:  [['啲','rpt'],['地','gpd'],['低','ojws'],['第','hnlh'],['弟','nolh']],
+  dik: [['的','pty'],['敵','yrytk']],
+  dim: [['點','ifo'],['店','iytr'],['掂','qiyr'],['滴','eytr']],
+  din: [['電','mdhwu'],['店','iytr'],['典','btmc'],['顛','ipmbc']],
+  ding:[['定','jkm'],['訂','ymn'],['丁','mn'],['頂','mnbc']],
+  dip: [['碟','mrttd'],['疊','tlws'],['蝶','lirrk']],
+  dit: [['跌','rmhm'],['鐵','cogi']],
+  diu: [['吊','hsr'],['屌','suh'],['刁','sh']],
+  dok: [['讀','yrmd'],['毒','emqi'],['督','hbd']],
+  dong:[['當','fbrb'],['黨','fbrywf'],['動','hmks'],['棟','dhwu'],['洞','emwl'],['凍','imwl']],
+  dou: [['都','kanl'],['到','mnd'],['度','idq'],['道','ytv'],['島','rrnmu'],['刀','shn'],['導','xyvd']],
+  duk: [['讀','yrmd'],['毒','emqi'],['督','hbd']],
+  dung:[['動','hmks'],['棟','dhwu'],['洞','emwl'],['凍','imwl'],['東','dw'],['董','tmwf']],
+  // E
+  e:   [['呃','rmnk'],['啞','rumv'],['鵝','oghaf']],
+  ei:  [['唉','rmo'],['腮','bce']],
+  // F
+  faa: [['花','tpd'],['化','op'],['話','yrv'],['畫','lgws'],['發','none'],['法','iena']],
+  faai:[['快','pdk'],['塊','gpdk'],['筷','hpdk']],
+  faan:[['反','hne'],['返','yhnp'],['飯','oihhne'],['番','hwtc'],['翻','sjhaf'],['范','tphne'],['犯','khne']],
+  faap:[['法','iena'],['乏','epi']],
+  faat:[['發','none'],['罰','bwyij']],
+  fai: [['費','lmbmc'],['廢','inoe'],['飛','nohto'],['肺','bsa'],['吠','rkd']],
+  fam: [['訃','yno']],
+  fan: [['分','csh'],['粉','fdsh'],['份','osh'],['奮','tg'],['忿','csop'],['吩','rcsh'],['芬','tcsh']],
+  fang:[['風','hnl']],
+  fat: [['忽','nkp'],['佛','oln'],['拂','qhln']],
+  fau: [['浮','ebq'],['否','mfr'],['副','llln'],['富','jcr'],['付','od'],['孵','ybsj'],['浮','ebq']],
+  fe:  [['飛','nohto']],
+  fei: [['飛','nohto'],['肥','bno'],['費','lmbmc'],['廢','inoe'],['妃','vno']],
+  fing:[['丰','qi']],
+  fit: [['忽','nkp']],
+  fo:  [['火','f'],['貨','opbc'],['夥','kof'],['課','yjr'],['禍','ifhne']],
+  fok: [['霍','mbf'],['惑','yhup'],['斛','cryhn']],
+  fong:[['方','ys'],['放','ysok'],['房','ys'],['訪','yys'],['妨','vys'],['防','nlys'],['況','imh']],
+  fu:  [['夫','qo'],['父','ck'],['富','jcr'],['府','ior'],['婦','vjlg'],['負','nbuc'],['護','yqog'],['附','nlwd'],['傅','obsd'],['腐','ibsb']],
+  fui: [['灰','mof'],['悔','pob'],['匯','bdlee'],['惠','ph'],['繪','vobb'],['會','omwc'],['諱','yyop']],
+  fun: [['歡','ogno'],['款','tgno'],['寬','jtu'],['分','csh'],['粉','fdsh'],['份','osh']],
+  fung:[['風','hnl'],['豐','qi'],['瘋','knl'],['縫','vcor'],['蜂','liqo'],['鳳','hnlaf'],['楓','dhnl']],
+  fut: [['闊','anr'],['活','hemr']],
+  // G
+  gaa: [['家','jmso'],['加','ksr'],['假','opas'],['佳','ogg'],['架','kslj'],['嫁','vopas'],['夾','kmoo']],
+  gaai:[['界','wlj'],['解','nbrj'],['街','horgg'],['改','ok'],['介','oo'],['戒','ims']],
+  gaam:[['減','eiiw'],['鑑','cimkb'],['艦','hyimk'],['劍','oaln'],['兼','tbo'],['監','smbo']],
+  gaan:[['間','ana'],['健','ojmo'],['件','onl'],['見','buhn'],['建','nvl'],['漸','eqis'],['簡','hakon']],
+  gaap:[['甲','wl'],['夾','kmoo'],['鴿','oirhaf']],
+  gaat:[['割','HRLN'],['葛','tag'],['轄','jhhwl']],
+  gaau:[['教','grok'],['攪','qhds'],['交','yck'],['較','yyck']],
+  gai: [['雞','ohaf'],['計','yomn'],['繼','vhye'],['季','hdo'],['記','yvii'],['技','qhio'],['既','aihp']],
+  gak: [['格','DHER'],['隔','nlher'],['革','TLJ']],
+  gam: [['金','c'],['今','oin'],['禁','pdc'],['感','imop'],['錦','cbgr']],
+  gan: [['斤','hml'],['近','yshml'],['緊','vhml'],['根','dav'],['跟','rmav'],['巾','lb'],['僅','ojmo']],
+  gang:[['耕','mqmq'],['更','mlk'],['梗','dlwl'],['硬','mrmwl'],['杠','dm']],
+  gap: [['及','nhe'],['急','ph']],
+  gat: [['乞','no'],['吉','grr'],['桔','dgr']],
+  gau: [['九','kn'],['久','ks'],['舊','hysb'],['救','hysok'],['狗','khpr'],['夠','ksks']],
+  ge:  [['個','ob'],['嘅','rpe'],['既','aihp']],
+  gei: [['機','domo'],['己','su'],['幾','vihi'],['寄','jphj'],['技','qhio'],['記','yvii'],['雞','ohaf']],
+  gek: [['擊','qjkb'],['激','eyak'],['隙','nlhh']],
+  geng:[['鏡','cabt'],['經','vbg'],['頸','mbbc'],['硬','mrmwl']],
+  gi:  [['機','domo'],['己','su'],['幾','vihi']],
+  gik: [['極','dbjj'],['擊','qjkb'],['激','eyak']],
+  gim: [['劍','oaln'],['鈐','cinl'],['夾','kmoo']],
+  gin: [['見','buhn'],['建','nvl'],['健','ojmo'],['件','onl'],['鍵','cjmo']],
+  ging:[['京','yrf'],['驚','sryjj'],['境','gmot'],['鏡','cabt'],['頸','mbbc'],['勁','gaks'],['徑','hobc'],['莖','tubg'],['經','vbg']],
+  gip: [['劫','kss'],['夾','kmoo']],
+  git: [['結','vgrr'],['傑','ocij'],['潔','ehpe']],
+  giu: [['叫','rsl'],['橋','dhjj'],['轎','jjhjj'],['嬌','vpas']],
+  go:  [['哥','mrnr'],['個','ob'],['歌','mrnno'],['過','ybbr'],['果','wd'],['戈','i']],
+  gok: [['角','nbg'],['覺','hbog'],['各','hers'],['閣','andj']],
+  gong:[['講','yrgr'],['江','ec'],['缸','mrc'],['港','emy'],['剛','bln'],['鋼','cbln'],['崗','ubln']],
+  gou: [['高','yrb'],['稿','hdyrb'],['搞','qyrb'],['夠','ksks'],['狗','khpr'],['告','hr'],['膏','yrbb']],
+  gu:  [['孤','ndno'],['古','jr'],['故','jrok'],['顧','yonbc'],['鼓','jriku'],['固','wj'],['股','bjhne'],['辜','ywdj'],['蛊','rj'],['骨','bbq']],
+  gui: [['貴','wlbc'],['鬼','hwni'],['桂','dgg'],['規','ygmu'],['跪','rmkl'],['歸','slhsb']],
+  guk: [['局','srir'],['菊','thsi'],['谷','csr'],['告','hr']],
+  gum: [['衫','lash']],
+  gun: [['官','jbr'],['館','oijbr'],['管','hjbr'],['冠','bhjj'],['貫','wlbmc'],['觀','hnmuo'],['灌','eilg']],
+  gung:[['工','m'],['公','cm'],['功','km'],['共','tc'],['供','otc'],['宮','jlb'],['弓','n'],['貢','mbc'],['攻','mrok'],['恭','tep'],['恐','teop']],
+  gut: [['骨','bbq'],['割','hrln']],
+  gwaa:[['掛','qgg'],['爪','hlo'],['瓜','hpo'],['寡','jmo'],['蛙','jukn']],
+  gwaai:[['乖','hlp'],['怪','pgr'],['拐','qhj']],
+  gwaan:[['關','anni'],['慣','pwlb'],['管','hjbr']],
+  gwai:[['貴','wlbc'],['鬼','hwni'],['桂','dgg'],['規','ygmu'],['歸','slhsb']],
+  gwam:[['韻','lbop']],
+  gwat:[['骨','bbq'],['刮','hhln'],['括','qhr']],
+  // H
+  haa: [['下','km'],['夏','msly'],['嚇','rkmr'],['蝦','liky'],['哈','romr'],['瞎','buyf']],
+  haai:[['鞋','tjqmv'],['械','diws'],['駭','sfdp']],
+  haam:[['咸','ih'],['喊','rimop'],['嫌','vomd']],
+  haan:[['閒','ana'],['限','nlyy'],['恨','pav']],
+  haap:[['俠','okmoo'],['狹','khkmoo'],['匣','skwl']],
+  haat:[['瞎','buyf'],['喝','romb']],
+  haau:[['效','ykok'],['校','dyok'],['考','jmds'],['好','vks']],
+  hai: [['係','onl'],['喺','rop'],['吸','ryp'],['希','xlb'],['稀','hdxl'],['戲','itoe']],
+  hak: [['黑','wf'],['客','jkher'],['赫','gof']],
+  ham: [['含','omr'],['坎','guo'],['憾','pypm']],
+  han: [['很','xav'],['恨','pav'],['狠','xhav'],['漢','emv'],['限','nlyy']],
+  hang:[['行','hohm'],['幸','gtj'],['杏','dom'],['恒','pgng']],
+  hap: [['合','omr'],['盒','omwj'],['洽','eomr'],['狹','khkmoo']],
+  hat: [['喝','romb'],['渴','ehgr']],
+  hau: [['後','rvii'],['口','r'],['猴','khrvii'],['喉','rrvii'],['厚','odp']],
+  hei: [['起','sqpu'],['希','xlb'],['喜','gtr'],['氣','omon'],['氦','omlb'],['禧','ifgtr']],
+  hek: [['嚇','rkmr']],
+  heng:[['慶','iop']],
+  heoi:[['許','yshj'],['虛','ipd'],['去','go']],
+  hi:  [['希','xlb'],['稀','hdxl'],['嬉','vjmo']],
+  hik: [['嗯','rnot']],
+  him: [['謙','yyto'],['嫌','vomd']],
+  hin: [['顯','fbabc'],['獻','fbnl'],['憲','jnop'],['現','mgbuc']],
+  hing:[['興','hxbc'],['慶','iop'],['兄','runm'],['熊','cogf']],
+  hip: [['協','mkss'],['脅','bkss']],
+  hit: [['歇','anmo'],['竭','ujam']],
+  hiu: [['囂','rrrmm'],['孝','hdkn']],
+  ho:  [['好','vks'],['可','mnr'],['何','omn'],['河','emn'],['荷','tomn'],['賀','jrbc'],['嗬','rmnr']],
+  hoi: [['開','anmt'],['海','eopd'],['凱','ubno']],
+  hok: [['學','bds'],['鶴','hgaf'],['確','mrhj']],
+  hong:[['航','oybm'],['巷','tmnl'],['項','mnbc'],['康','iso']],
+  hou: [['號','rhask'],['好','vks'],['豪','ykmb'],['毫','ykmhj'],['嗥','ykmr']],
+  huk: [['哭','rkd'],['斛','cryhn'],['湖','eqmb']],
+  hung:[['雄','oghxg'],['洪','eyik'],['熊','cogf'],['窮','jcn'],['紅','vcr']],
+  // I
+  i:   [['以','ph'],['意','ytap'],['而','mbv'],['衣','ycv'],['醫','sbtc']],
+  // J
+  jaa: [['遮','yrjj'],['者','jka'],['炸','fhjl']],
+  jaai:[['齋','yljj']],
+  jaam:[['站','ytlj']],
+  jaan:[['錢','cqis'],['讚','ycor'],['斬','lmhml'],['蘸','tsks']],
+  jaap:[['雜','doghh'],['汁','ell']],
+  jaat:[['扎','qjl'],['剎','nlln'],['察','jtle']],
+  jaau:[['找','qmv'],['照','arof'],['招','rnjj'],['召','sir']],
+  jai: [['梯','dhql'],['提','qhml'],['祭','lfk'],['際','nllf'],['劑','yflln'],['制','hbln'],['緻','vhbln']],
+  jam: [['任','omn'],['林','dd'],['尋','bqu'],['飲','ooiv']],
+  jan: [['人','o'],['仁','op'],['忍','sup'],['認','ysuv'],['任','omn'],['韌','nlsup']],
+  jang:[['英','tak'],['仍','oph'],['剩','bqln']],
+  jap: [['入','oh'],['及','nhe'],['拾','qomr'],['習','thsb']],
+  jat: [['日','a'],['一','m'],['逸','ybkp'],['乙','nu'],['佚','oywp']],
+  jau: [['有','kb'],['由','lw'],['油','elw'],['又','ke'],['友','kle'],['右','msr'],['幼','vinn'],['尤','iku']],
+  je:  [['姐','vsjl'],['遮','yrjj'],['者','jka'],['借','ojjl'],['謝','yrjomn']],
+  jek: [['若','tmsj']],
+  jeng:[['英','tak'],['贏','ybcsb'],['仍','oph']],
+  ji:  [['而','mbv'],['已','su'],['以','ph'],['意','ytap'],['義','tgi'],['二','mm'],['兒','hubv'],['耳','sjj'],['你','opl'],['易','ahs']],
+  jik: [['亦','yck'],['益','tmc'],['翼','sjog'],['億','ohvf'],['憶','prhvf'],['役','hopo']],
+  jim: [['閻','anhwv'],['淹','ebkc'],['炎','ff'],['艷','smvmt']],
+  jin: [['言','ymr'],['然','bf'],['燃','obf'],['研','mgmn'],['延','yynl'],['演','eytp'],['煙','onl'],['顏','ipsbc']],
+  jing:[['應','igo'],['英','tak'],['仍','oph'],['影','lhok'],['嬴','ybcsv'],['郢','lbnl'],['盈','bcbt']],
+  jip: [['葉','tjjc'],['業','dhd'],['接','qod']],
+  jit: [['熱','ogf'],['節','hjr'],['揭','qapv'],['截','gihml']],
+  jiu: [['要','mwlv'],['腰','bmfv'],['搖','qmfv'],['遙','ymfv'],['藥','tmfv'],['邀','mfvnl']],
+  jok: [['若','tmsj'],['弱','nmss'],['着','thq'],['作','oma']],
+  jong:[['樣','dygs'],['壤','gmfv'],['釀','mfvsh']],
+  jou: [['早','ajm'],['造','ytvo'],['草','tao'],['遭','ytvo'],['灶','fan']],
+  ju:  [['如','vr'],['儒','oomd'],['乳','bds'],['入','oh'],['茹','tvr'],['汝','evr']],
+  juk: [['肉','hab'],['玉','mgni'],['浴','emso'],['慾','pbsb'],['鬱','pbuc'],['辱','haqsl'],['育','hib']],
+  jung:[['用','bq'],['絨','vhqi'],['茸','thqi'],['容','orb'],['熔','ofrb'],['融','mbqi'],['榕','dorb'],['庸','ihub']],
+  jut: [['越','gybr'],['月','b'],['粵','hfbq'],['悅','pbkr']],
+  // K
+  kaa: [['卡','yl'],['咖','rksr']],
+  kaai:[['楷','dmoo']],
+  kaan:[['看','hkbu'],['墾','havg']],
+  kaat:[['卡','yl']],
+  kai: [['啟','ysk'],['契','qknd']],
+  kam: [['今','oin'],['禽','oism'],['琴','pcmn'],['噙','roman']],
+  kan: [['根','dav'],['墾','havg'],['懇','havp'],['很','xav']],
+  kang:[['肯','baj'],['坑','gon'],['硬','mrmwl']],
+  kap: [['及','nhe'],['急','ph'],['吸','ryp'],['泣','eyp'],['給','vomr']],
+  kat: [['乞','no'],['吉','grr']],
+  kau: [['球','igg'],['求','ije'],['扣','rna'],['靠','tybrj']],
+  kei: [['其','tmc'],['奇','kmnr'],['棋','dtmc'],['旗','ysotc'],['期','bdtc'],['齊','yyj'],['騎','sfkmnr'],['企','osl']],
+  kek: [['曲','lwd'],['劇','sgln']],
+  keng:[['強','nqkm'],['傾','onhbc']],
+  ki:  [['其','tmc'],['棋','dtmc'],['騎','sfkmnr']],
+  kik: [['隙','nlhh'],['曲','lwd'],['劇','sgln']],
+  kim: [['鉗','cshl'],['嵌','umhh']],
+  kin: [['謙','yyto'],['乾','jln'],['欠','no']],
+  king:[['強','nqkm'],['傾','onhbc'],['勁','gaks']],
+  kit: [['揭','qapv'],['竭','ujam']],
+  kiu: [['橋','dhjj'],['翹','sjhn'],['巧','mnh']],
+  ko:  [['可','mnr'],['柯','dmnr']],
+  kok: [['確','mrhj'],['殼','gihn']],
+  kong:[['康','iso'],['框','dbbr'],['況','imh']],
+  ku:  [['苦','tjr'],['庫','ip'],['褲','lrrb'],['哭','rkd']],
+  kuk: [['曲','lwd'],['局','srir']],
+  kung:[['窮','jcn'],['空','jcm'],['控','jcmok']],
+  kut: [['闊','anr'],['渴','ehgr'],['缺','qlno']],
+  kwaa:[['誇','ykmn'],['跨','rmkmn'],['垮','gkmn']],
+  kwai:[['葵','tqkm'],['鱖','nfqkm'],['虧','iqkm']],
+  kwan:[['捲','qfq'],['圈','wfq'],['倦','ofq'],['卷','fq'],['群','grrp']],
+  kwat:[['掘','qsje']],
+  // L
+  laa: [['啦','rrrd'],['喇','rhrj'],['拉','qsj']],
+  laai:[['嚟','rmsy'],['賴','dlbc']],
+  laam:[['覽','smnhuc'],['籃','hsimb'],['攬','qsimb'],['藍','tsimb'],['爛','ofsimb']],
+  laan:[['難','togll'],['蘭','tabt'],['懶','ptogll'],['爛','ofsimb']],
+  laap:[['臘','bsimb'],['蠟','lisimb'],['鑞','csimb'],['立','yt']],
+  laat:[['辣','ydtj'],['喇','rhrj'],['辢','ydtj']],
+  laau:[['溜','ehjj'],['留','hwb'],['流','eyiu'],['瘤','khjj']],
+  lai: [['利','hdn'],['例','ohdn'],['勵','fbnks'],['禮','ifmh'],['麗','mbbtc'],['李','dno'],['理','mgbg'],['里','wg'],['厘','mwg']],
+  lak: [['勒','kssks'],['嘞','rkssks']],
+  lam: [['林','dd'],['臨','xyyl'],['零','mblmy'],['冧','idd']],
+  lan: [['難','togll'],['蘭','tabt'],['欄','xotgll']],
+  lang:[['冷','oph']],
+  lap: [['立','yt'],['粒','fdyt'],['笠','hyt'],['躐','rmtwl']],
+  lat: [['辣','ydtj'],['列','mnln'],['剌','hjln']],
+  lau: [['流','eyiu'],['留','hwb'],['樓','dsjj'],['劉','hln'],['縷','vffb']],
+  le:  [['嘞','rkssks'],['呢','rsj']],
+  lei: [['吏','mjkl'],['厲','mss'],['裂','geln'],['例','ohdn'],['離','ybog'],['勵','fbnks']],
+  lek: [['叻','rkss']],
+  leng:[['靚','selq'],['零','mblmy'],['零','mblmy']],
+  leoi:[['呂','rr'],['旅','hds'],['侶','orr'],['慮','prb'],['濾','eyrb'],['律','hqdl']],
+  li:  [['里','wg'],['李','dno'],['理','mgbg'],['利','hdn'],['禮','ifmh'],['離','ybog'],['力','ks'],['歷','mssks']],
+  lik: [['力','ks'],['歷','mssks'],['曆','mss'],['勒','kssks'],['塄','gkkk']],
+  lim: [['廉','ioav'],['臉','bgomv'],['鐮','cmavw']],
+  lin: [['連','yvvl'],['聯','sfjj'],['練','vjjj'],['蓮','tyvvl'],['簾','hioav']],
+  ling:[['令','oiin'],['另','rks'],['領','oiibc'],['零','mblmy'],['靈','mbog'],['鈴','coiin'],['齡','hmoiin']],
+  lip: [['獵','khoii'],['蠟','lisimb']],
+  lit: [['列','mnln'],['裂','geln'],['烈','mnf'],['劣','kspi']],
+  liu: [['料','hdln'],['聊','syrn'],['了','nn'],['瞭','bunn'],['寥','jcfb']],
+  lo:  [['囉','rwlg'],['老','jks'],['路','rmrb'],['露','mbrb'],['魯','nfj'],['爐','off'],['鑼','cgwlg'],['蘿','twlg']],
+  lok: [['樂','dcs'],['絡','vher'],['落','tcr'],['烙','ofher'],['駱','sfher']],
+  long:[['朗','jiab'],['浪','eyuy'],['郎','ijbnl'],['廊','iijb'],['狼','khijb'],['螂','lijb']],
+  lou: [['老','jks'],['路','rmrb'],['廬','ivmr'],['盧','yvmr'],['胡','jrb'],['鹵','wjif'],['勞','ksmks']],
+  luk: [['六','kc'],['陸','nlytg'],['綠','vhgr'],['錄','cgr'],['鹿','ipytj'],['碌','mryg']],
+  lung:[['龍','ybc'],['籠','hybc'],['聾','ybcsj'],['隆','nlytg']],
+  // M
+  maa: [['馬','sqsf'],['嗎','rwhaf'],['媽','vsqsf'],['麻','ifd']],
+  maai:[['買','wqbc'],['埋','gwg'],['賣','gwqbc']],
+  maam:[['蟆','lifd']],
+  maan:[['慢','pamy'],['萬','tmwi'],['幔','lamy'],['滿','emwv'],['漫','eamy'],['蠻','vxili'],['麵','fbnav']],
+  maap:[['抹','qbkf']],
+  maat:[['沫','ebkf'],['抹','qbkf'],['末','dm']],
+  maau:[['貓','nfhlo'],['矛','nhv'],['茂','ihi']],
+  mai: [['咪','rfdq'],['迷','yfq'],['謎','yyfq'],['覓','phbu'],['密','jphp'],['蜜','jphli']],
+  mak: [['默','khuf'],['麥','oqo']],
+  mam: [['媽','vsqsf']],
+  man: [['文','yk'],['問','anyk'],['蚊','liyk'],['吻','rph'],['紋','vyk'],['民','hp']],
+  mang:[['猛','khgni'],['孟','bnd'],['盲','yuhq'],['氓','yhp']],
+  map: [['沐','eyd'],['抹','qbkf']],
+  mat: [['物','hqil'],['沒','bkno'],['勿','phsi']],
+  mau: [['茂','ihi'],['貿','bchhb'],['謀','yfd'],['侮','oshi'],['某','dm']],
+  me:  [['咩','rohl'],['喇','rhrj']],
+  mei: [['味','rjd'],['尾','sulc'],['美','tgo'],['未','jl'],['妹','vjl'],['媚','vlb'],['謎','yyfq'],['迷','yfq']],
+  mik: [['覓','phbu'],['密','jphp']],
+  min: [['面','mwyl'],['棉','dkb'],['免','nahu'],['麵','fbnav'],['民','hp'],['敏','hpok']],
+  ming:[['明','ab'],['名','rhn'],['命','omn'],['茗','tahn']],
+  miu: [['妙','vhh'],['苗','tmfh'],['廟','isrb'],['秒','hfhh'],['描','qsfh']],
+  mo:  [['磨','iiimr'],['摩','iiiq'],['莫','tak'],['模','dtlo'],['墨','wff'],['謀','yfd'],['某','dm'],['魔','iiirg']],
+  mog: [['莫','tak']],
+  moi: [['梅','dowy'],['煤','ofowy']],
+  mok: [['膜','biii'],['莫','tak'],['幕','takb']],
+  mong:[['望','yrb'],['忘','yp'],['夢','nnbv'],['猛','khgni'],['網','vbtlo'],['孟','bnd']],
+  mou: [['毛','hqu'],['矛','nhv'],['某','dm'],['冇','bkhu'],['無','ofh'],['霧','mboii'],['務','nheks'],['戊','ihs'],['謀','yfd'],['冒','aub'],['貿','bchhb']],
+  mui: [['梅','dowy'],['妹','vjl'],['每','hiop']],
+  muk: [['木','d'],['目','bu'],['牧','hiok'],['墓','tawg']],
+  mun: [['門','an'],['問','anyk'],['滿','emwv'],['悶','anop']],
+  mung:[['夢','nnbv'],['蒙','tycb']],
+  // N
+  naa: [['那','kshnl'],['哪','rshl']],
+  naai:[['奶','vne'],['乃','ns']],
+  naam:[['男','wks'],['南','fjll'],['楠','dfjl']],
+  naan:[['難','togll'],['南','fjll']],
+  naap:[['納','vnl'],['呐','rnl']],
+  nai: [['泥','esj'],['尼','sjo'],['你','opl']],
+  nak: [['力','ks']],
+  nam: [['男','wks'],['南','fjll']],
+  nan: [['難','togll'],['捻','qomd']],
+  nang:[['能','ibbp'],['嫩','vtohe']],
+  nap: [['納','vnl'],['捻','qomd']],
+  nat: [['捺','qkhe']],
+  nau: [['扭','qng'],['紐','vng'],['鈕','cng'],['耨','sjtj']],
+  nei: [['你','opl'],['泥','esj'],['尼','sjo']],
+  ng:  [['五','mdm'],['午','hj'],['吳','rrnkm'],['誤','yabt'],['悟','prrj'],['語','yrp'],['鵡','sirraf'],['娛','vrrj']],
+  ngo: [['我','hqi'],['鵝','oghaf'],['餓','oihqi'],['岸','umkm']],
+  ngaa:[['牙','mvdh'],['雅','ogmvd'],['啞','rumv'],['呀','rmnr']],
+  ngaai:[['外','nhyj'],['崖','uhmy']],
+  ngaam:[['巖','urff'],['嗯','rnot']],
+  ngaan:[['眼','buav'],['顏','ipsbc'],['雁','ogys']],
+  ngaap:[['鴨','hnhaf'],['壓','mks']],
+  ngaat:[['軋','jjll']],
+  ngau:[['牛','hq'],['歐','srmno'],['偶','olmob'],['藕','torb']],
+  ngok:[['額','mgbc'],['鱷','nfog'],['岳','ubhq']],
+  ngon:[['安','jv'],['岸','umkm'],['按','qmks']],
+  ngu: [['魚','nf'],['愚','bcp'],['漁','enf']],
+  ni:  [['你','opl'],['尼','sjo']],
+  nik: [['逆','yuhml']],
+  nim: [['念','inp']],
+  nin: [['年','ohq'],['念','inp']],
+  ning:[['寧','jmbn'],['凝','imnf']],
+  nip: [['捏','qqmg'],['涅','equm']],
+  nit: [['捏','qqmg']],
+  niu: [['鳥','pogaf'],['尿','she'],['扭','qng']],
+  noe: [['女','v'],['肉','hab']],
+  noeng:[['釀','mfvsh'],['嚷','rfmv']],
+  noi: [['內','ob'],['賴','dlbc'],['耐','sjhj']],
+  nok: [['諾','ythj'],['挪','qkhnl']],
+  nou: [['奴','vks'],['努','vkss'],['怒','vksp'],['腦','bkks'],['惱','pkks'],['鬧','kkhh']],
+  nuk: [['肉','hab']],
+  nung:[['農','wytj'],['濃','ewyt'],['膿','bwyt']],
+  // O
+  o:   [['啊','rmr'],['哦','rhnr'],['噢','rflr'],['喔','rmwk']],
+  oi:  [['愛','bbpe'],['哀','yomv']],
+  ok:  [['惡','pmmv'],['噁','rmmv']],
+  on:  [['安','jv'],['按','qmks'],['案','jkd']],
+  ong: [['骯','bbqn']],
+  ou:  [['澳','ebbr'],['嘔','rum']],
+  // P
+  paa: [['怕','phj'],['爬','wle'],['趴','rchj'],['琶','pmwle']],
+  paai:[['派','estj'],['牌','dhamj']],
+  paan:[['盤','hywj'],['判','fqln']],
+  paang:[['朋','bb'],['碰','mrbb'],['棚','dbb']],
+  paap:[['拍','qqmb']],
+  paat:[['泡','epou'],['拍','qhqmb']],
+  paau:[['砲','mrpou'],['炮','fpou'],['跑','rmhq'],['抛','qhq']],
+  pai: [['皮','bhe'],['被','lean'],['疲','khbe'],['脾','bjhp']],
+  pak: [['拍','qhqmb'],['白','hab'],['帕','phj'],['柏','dhab']],
+  pan: [['貧','opbc'],['品','rrr'],['拼','qfqp'],['頻','llbc']],
+  pang:[['朋','bb'],['碰','mrbb'],['棚','dbb'],['蓬','tybc']],
+  pap: [['啪','rqmb']],
+  pat: [['匹','ls'],['撇','qyp']],
+  pau: [['抱','qpu'],['泡','epou'],['拋','qhq']],
+  pei: [['皮','bhe'],['被','lean'],['脾','bjhp']],
+  pek: [['僻','oyst'],['辟','yst']],
+  peng:[['評','yhj']],
+  pi:  [['皮','bhe'],['批','qhj'],['否','mfr'],['屁','sno']],
+  pik: [['僻','oyst'],['匹','ls']],
+  pin: [['篇','hhjn'],['偏','ojln'],['騙','sfyjln'],['片','llml']],
+  ping:[['評','yhj'],['平','mjj'],['瓶','mgmj'],['乒','hmj'],['憑','imjp']],
+  pit: [['撇','qyp'],['瞥','sxbu']],
+  piu: [['漂','ehtc'],['票','hwlf'],['飄','hnhtc']],
+  po:  [['婆','iiv'],['迫','yohr'],['薄','tieii'],['破','khhe']],
+  pok: [['撲','qmm'],['朴','dy'],['瀑','emob']],
+  pong:[['旁','ysbl'],['膀','bgsb'],['龐','yybii']],
+  pou: [['浦','eqmb'],['鋪','cqmb'],['普','ahj'],['舖','ijsb'],['脯','bqmb']],
+  pui: [['佩','opn'],['陪','nlbj'],['培','gbj'],['賠','bcbj'],['配','mnsj'],['杯','dmno']],
+  pun: [['噴','rjbc'],['盆','cshwj']],
+  pung:[['碰','mrbb'],['蓬','tybc']],
+  put: [['潑','eeee'],['撲','qmm']],
+  // S
+  saa: [['沙','esh'],['殺','hknne'],['沙','esh'],['傻','onbv']],
+  saai:[['晒','amhj'],['師','lbmlb'],['曬','ajhj']],
+  saam:[['三','mmm'],['衫','lash'],['滲','esmm']],
+  saan:[['山','u'],['刪','ukln'],['閂','anm'],['扇','hsj']],
+  saap:[['霎','mblj'],['翣','hfhj']],
+  saat:[['殺','hknne'],['薩','tydl']],
+  saau:[['掃','qrvd'],['嫂','vrvd'],['騷','sfrvd']],
+  sai: [['世','lj'],['細','vjl'],['洗','eycq'],['西','mcwf'],['希','xlb'],['四','wc'],['思','psmb'],['誓','yggj'],['勢','gieks']],
+  sak: [['塞','jbhg'],['索','vfd']],
+  sam: [['心','p'],['深','epmd'],['審','jsmb'],['滲','esmm'],['沈','epl']],
+  san: [['新','hstj'],['身','hjb'],['信','oyj'],['申','lk'],['神','lhkl'],['辛','yt'],['薪','thstj'],['先','hahu']],
+  sang:[['生','hqm'],['省','hqp'],['聲','sehqm']],
+  sap: [['十','j'],['習','thsb'],['拾','qomr'],['什','oj']],
+  sat: [['失','hql'],['實','jmhj'],['室','jmmr'],['識','yrhml']],
+  sau: [['手','q'],['首','hbu'],['瘦','khso'],['受','bbhe'],['售','ylr'],['壽','qomj'],['守','jqkn'],['收','yle']],
+  se:  [['些','ptd'],['寫','jyhs']],
+  sei: [['四','wc'],['死','hvp'],['嘶','rsmb']],
+  sek: [['石','mr'],['惜','pop'],['析','dsh']],
+  seng:[['勝','bqks'],['聲','sehqm'],['省','hqp']],
+  seoi:[['水','e'],['隨','nlydq'],['瑞','mgqhj'],['睡','buemd'],['碎','mrhj'],['歲','hioe'],['遂','yhm'],['稅','hdhj']],
+  si:  [['時','aim'],['是','am'],['事','jl'],['使','ojl'],['試','ygj'],['死','hvp'],['司','shr'],['私','hdss'],['施','yhsj'],['思','psmb'],['絲','vivim'],['四','wc']],
+  sik: [['色','anhe'],['食','yir'],['識','yrhml'],['錫','coma'],['熄','ofp'],['席','itmc'],['拭','qgj']],
+  sim: [['閃','anom'],['纖','vnhx']],
+  sin: [['先','hahu'],['仙','ohu'],['線','vnhx'],['線','vnhx'],['鮮','nfhahu'],['扇','hsj']],
+  sing:[['成','ims'],['聖','sehj'],['星','ahqm'],['姓','vabt'],['盛','ime'],['誠','yims'],['承','ntsy']],
+  sip: [['攝','qytj'],['涉','ewylh']],
+  sit: [['設','ysl'],['舌','hbr'],['蝕','liims']],
+  siu: [['小','nc'],['笑','hknd'],['燒','onhs'],['少','fq'],['俏','ophh']],
+  so:  [['梳','dyhs'],['疏','nhqcs']],
+  soe: [['靴','tjshr']],
+  soeng:[['霜','mbhqj'],['雙','ccog'],['爽','kkg'],['傷','oihs']],
+  soek:[['削','hlln'],['俗','oosd']],
+  soi: [['腮','bce'],['犀','xiohq']],
+  sok: [['作','oma'],['索','vfd']],
+  song:[['喪','mck'],['爽','kkg'],['送','yhp'],['聳','grsj'],['桑','edd']],
+  sou: [['數','lovok'],['素','vvd'],['訴','yqs'],['塑','ppmg'],['酥','hqsii']],
+  suk: [['叔','hhsk'],['熟','hhsuf'],['宿','ojj'],['縮','vjj']],
+  sung:[['鬆','csk'],['宋','jd'],['聳','grsj'],['送','yhp'],['誦','ybkr']],
+  syu: [['書','sfj'],['樹','djsj'],['鼠','hxvy'],['恕','vkp'],['署','hahq'],['術','hj'],['叔','hhsk']],
+  syun:[['算','hane'],['旋','ysod'],['選','ybsj'],['酸','suhne'],['船','hyrsm']],
+  syut:[['雪','mblmy'],['說','yrsmr'],['薛','tbjj']],
+  // T
+  taa: [['他','opm'],['她','vpm'],['塔','grrj'],['踏','rmtj'],['它','jpd']],
+  taai:[['太','dk'],['態','inp'],['胎','bpd'],['臺','irhj'],['跆','rmtpd']],
+  taam:[['探','qjmd'],['貪','phc'],['痰','kfd'],['坦','gal'],['覃','mwjj']],
+  taan:[['攤','qhxg'],['彈','nftj'],['炭','huf'],['毯','hquiv']],
+  taap:[['搭','qrrd'],['踏','rmtj'],['鈸','chtj']],
+  taat:[['脫','bkr'],['達','ydmq']],
+  taau:[['偷','ohlo'],['套','gkni'],['饕','gkniov']],
+  tai: [['體','bhjj'],['題','jphml'],['梯','dhql'],['提','qhml'],['替','qhjj'],['帝','yblb'],['蹄','rmlhj'],['啼','rhjmn']],
+  tak: [['特','hgqi'],['踢','rmybc']],
+  tam: [['貪','phc'],['痰','kfd'],['探','qjmd']],
+  tan: [['天','mk'],['田','w'],['填','gwlj'],['典','btmc'],['甜','mwtj'],['添','emoh'],['恬','pwj']],
+  tang:[['等','hgni'],['燈','onom'],['藤','tmmo'],['騰','sftmo']],
+  tap: [['塔','grrj'],['踢','rmybc']],
+  tat: [['脫','bkr']],
+  tau: [['頭','mabo'],['投','qhoe'],['偷','ohlo'],['透','yoqs']],
+  tei: [['底','iyws'],['梯','dhql'],['體','bhjj']],
+  teng:[['聽','srhml'],['廳','irhml'],['停','ohkm']],
+  ti:  [['提','qhml'],['題','jphml'],['底','iyws']],
+  tik: [['踢','rmybc'],['剔','hqln'],['剃','hjln']],
+  tim: [['添','emoh'],['甜','mwtj'],['恬','pwj']],
+  tin: [['天','mk'],['田','w'],['填','gwlj'],['甜','mwtj']],
+  ting:[['聽','srhml'],['廳','irhml'],['停','ohkm'],['定','jkm'],['釘','cmn']],
+  tip: [['貼','bcrj'],['鐵','cogi']],
+  tit: [['鐵','cogi'],['帖','lhj']],
+  tiu: [['跳','rmbkn'],['挑','qbkn'],['條','oyiu']],
+  to:  [['拖','qhsm'],['脫','bkr'],['托','qpd']],
+  toi: [['台','ir'],['抬','qir']],
+  tok: [['托','qpd'],['托','qpd']],
+  tong:[['湯','emhs'],['糖','fds'],['堂','fbrg'],['唐','irm'],['躺','rbfb'],['趟','gofb']],
+  tou: [['圖','wjr'],['兔','niku'],['途','yomd'],['土','g'],['吐','rg'],['徒','homd']],
+  tui: [['推','qhug'],['退','ynnlk'],['腿','bynk']],
+  tuk: [['禿','hdhu'],['突','mck']],
+  tung:[['同','bmr'],['桶','djsb'],['痛','kmwl'],['通','ybnl'],['童','ytg'],['統','vjsb']],
+  // W
+  waa: [['話','yrv'],['畫','lgws'],['化','op'],['華','tam'],['蛙','jukn'],['瓦','mhn']],
+  waai:[['懷','pog'],['壞','gpog'],['歪','ymhj']],
+  waan:[['還','ywlb'],['環','gdwl'],['灣','eywb'],['頑','mgbc'],['玩','mgku']],
+  waap:[['挖','qhxu']],
+  waat:[['滑','ebbb'],['刮','hhln']],
+  wai: [['位','oy'],['為','bkso'],['唯','ryog'],['維','vogg'],['偉','ogbj'],['圍','wog'],['威','imhqu'],['惟','pyog']],
+  wak: [['劃','hln'],['惑','yhup']],
+  wan: [['溫','eppj'],['問','anyk'],['穩','hdppj'],['文','yk']],
+  wang:[['橫','dnf'],['宏','jnu']],
+  wat: [['活','hemr'],['屈','suym']],
+  wik: [['或','hgm']],
+  wing:[['永','ne'],['詠','yne'],['泳','ene'],['另','rks'],['令','oiin']],
+  wok: [['鑊','csks'],['或','hgm'],['惑','yhup']],
+  wong:[['王','mg'],['黃','mg'],['橫','dnf'],['蝗','limwg'],['往','homg']],
+  wu:  [['壺','yoj'],['戶','hs'],['護','yqog'],['虎','yphm'],['湖','eqmb'],['胡','jrb'],['互','mmhm']],
+  wui: [['會','omwc'],['回','w'],['匯','bdlee'],['惠','ph'],['繪','vobb']],
+  wun: [['換','qhmy'],['碗','mrhjj'],['頑','mgbc'],['桓','dmhg']],
+  wut: [['活','hemr'],['滑','ebbb'],['曷','apwr']],
+  // Z
+  zaa: [['渣','ehaj'],['炸','fhjl'],['詐','yhjl'],['扎','qjl']],
+  zaai:[['齋','yljj'],['仔','oknd'],['債','oypbs'],['摘','qytj'],['窄','jcqj']],
+  zaam:[['站','ytlj'],['暫','aml'],['佔','yor']],
+  zaan:[['讚','ycor'],['贊','qcbc'],['餞','oimq'],['殘','mnhne']],
+  zaap:[['雜','doghh'],['砸','mryj'],['閘','ankl']],
+  zaat:[['扎','qjl'],['紮','vjl'],['挫','quse']],
+  zaau:[['抓','qhlo'],['找','qmv'],['爪','hlo'],['照','arof']],
+  zai: [['仔','oknd'],['際','nllf'],['制','hbln'],['濟','eyrf'],['祭','lfk'],['劑','yflln'],['擠','qyrf'],['繼','vhye']],
+  zak: [['側','onhln'],['責','gpbc'],['澤','eyaj'],['賊','bcijk']],
+  zam: [['斟','smhj'],['針','cmn'],['浸','eqkl'],['枕','dpl']],
+  zan: [['珍','mgphh'],['陣','nlwlj'],['震','mthhe'],['真','mvjm']],
+  zang:[['增','gmob'],['憎','pmob'],['曾','camj'],['贈','bcmob'],['蒸','tbne']],
+  zap: [['執','gbso'],['汁','ell'],['蟄','liuf']],
+  zat: [['質','lnbmc'],['姪','vylg'],['窒','jcmr']],
+  zau: [['周','hbr'],['就','yksb'],['奏','dks'],['晝','lgaj'],['走','gyo'],['舟','hysm']],
+  ze:  [['者','jka'],['姐','vsjl'],['積','hdwf'],['謝','yrjomn'],['借','ojjl'],['遮','yrjj']],
+  zek: [['隻','lnog'],['積','hdwf'],['跡','rmhdf']],
+  zeng:[['鄭','ypnl'],['正','ymm'],['睜','buyb'],['爭','bsd']],
+  zi:  [['自','hbu'],['字','jnd'],['至','gi'],['志','gip'],['紙','vhj'],['支','ji'],['知','hqr'],['智','hqaj'],['之','ino'],['子','nd']],
+  zik: [['直','ywj'],['即','crsl'],['職','srhml'],['植','dhj'],['殖','mnhj'],['脂','bhj'],['識','yrhml']],
+  zim: [['佔','yor'],['尖','fhu'],['沾','efhr'],['占','yor']],
+  zin: [['戰','hims'],['箋','hob'],['錢','cqis'],['前','tbln'],['薦','tbtj']],
+  zing:[['正','ymm'],['整','ymmq'],['政','ymok'],['靜','gebsd'],['淨','egebsd'],['鄭','ypnl'],['症','kmm']],
+  zip: [['蜇','liybr'],['接','qod'],['摺','qytj']],
+  zit: [['節','hjr'],['絕','vfbk'],['截','gihml'],['折','qhjl']],
+  ziu: [['照','arof'],['招','rnjj'],['焦','ogku'],['蕉','tgku'],['朝','ajmb']],
+  zoe: [['坐','gog'],['座','igog'],['撮','qbbr']],
+  zoeng:[['漿','vyye'],['獎','vyyks'],['仗','onl'],['章','ytj'],['掌','qfbr'],['張','nmks'],['脹','bkmks'],['帳','lnmks']],
+  zoek:[['着','thq'],['爵','hwblo'],['鵲','ogyimr']],
+  zoi: [['再','lm'],['在','lk'],['載','jlj']],
+  zok: [['作','oma'],['昨','aam'],['鑿','tckc'],['琢','mgms']],
+  zong:[['裝','yiiv'],['撞','qujj'],['壯','vsg'],['狀','khvsg'],['莊','vg'],['葬','ttmj']],
+  zou: [['組','vrrj'],['早','ajm'],['阻','nljl'],['走','gyo'],['奏','dks'],['罪','wcyij']],
+  zuk: [['竹','h'],['足','ryo'],['族','ysohk'],['卒','ynj'],['燭','olf']],
+  zung:[['中','l'],['重','hjg'],['眾','bukg'],['鐘','cgcr'],['鍾','cgcr'],['終','vmj'],['種','hdwg'],['腫','bwg']],
+  zyu: [['主','yg'],['住','oyg'],['注','eyg'],['助','rbks'],['祝','ifkr'],['珠','mgmmj'],['朱','hjmd'],['煮','oggf'],['柱','dyg'],['箸','hjka'],['著','hjka']],
+  zyun:[['轉','jjii'],['專','jii'],['磚','mrjii'],['賺','bcjii']],
+  zyut:[['拙','qsu'],['絕','vfbk'],['啜','rbkr'],['掇','qyvd']]
+};
+
+// Quick = first + last char of cangjie code
+function toQuick(cj) {
+  if (!cj || cj.length === 0) return '';
+  if (cj.length === 1) return cj[0].toUpperCase();
+  return (cj[0] + cj[cj.length-1]).toUpperCase();
+}
+
+function getRadicalName(letter) {
+  return RADICAL[letter.toLowerCase()] || letter.toUpperCase();
+}
+
+// Strip tone number
+function stripTone(jp) {
+  return jp.replace(/[1-6]$/, '').toLowerCase().trim();
+}
+
+function lookup(raw) {
+  const jp = stripTone(raw);
+  return DATA[jp] || null;
+}
+
+// ─── UI ──────────────────────────────────────────────────────────────────────
+const input = document.getElementById('jyutInput');
+const resultsEl = document.getElementById('results');
+const sectionTitleEl = document.getElementById('sectionTitle');
+
+function buildCard(char, cj) {
+  const quick = toQuick(cj);
+  const card = document.createElement('div');
+  card.className = 'char-card';
+
+  // Character display
+  const charEl = document.createElement('div');
+  charEl.className = 'char-display';
+  charEl.textContent = char;
+
+  // Jyutping label
+  const jpEl = document.createElement('div');
+  jpEl.className = 'char-jyutping';
+  jpEl.textContent = input.value.trim() || '';
+
+  // Divider
+  const div = document.createElement('div');
+  div.className = 'divider';
+
+  // Quick section
+  const qs = document.createElement('div');
+  qs.className = 'quick-section';
+
+  const qlabel = document.createElement('div');
+  qlabel.className = 'quick-label';
+  qlabel.textContent = '速成碼';
+
+  const qkeys = document.createElement('div');
+  qkeys.className = 'quick-keys';
+
+  for (const letter of quick) {
+    const k = document.createElement('div');
+    k.className = 'key radical-key';
+    k.textContent = letter;
+    k.title = getRadicalName(letter);
+    qkeys.appendChild(k);
+  }
+
+  const radNames = [...quick].map(l => getRadicalName(l)).join('＋');
+  const qtxt = document.createElement('div');
+  qtxt.className = 'quick-code-text';
+  qtxt.textContent = radNames;
+
+  // Full cangjie
+  const cjlabel = document.createElement('div');
+  cjlabel.className = 'quick-label';
+  cjlabel.style.marginTop = '8px';
+  cjlabel.textContent = '倉頡全碼';
+
+  const cjkeys = document.createElement('div');
+  cjkeys.className = 'quick-keys';
+  for (const letter of cj.toUpperCase()) {
+    const k = document.createElement('div');
+    k.className = 'key';
+    k.textContent = letter;
+    k.title = getRadicalName(letter);
+    cjkeys.appendChild(k);
+  }
+
+  qs.appendChild(qlabel);
+  qs.appendChild(qkeys);
+  qs.appendChild(qtxt);
+  qs.appendChild(cjlabel);
+  qs.appendChild(cjkeys);
+
+  card.appendChild(charEl);
+  card.appendChild(jpEl);
+  card.appendChild(div);
+  card.appendChild(qs);
+
+  return card;
+}
+
+function render(val) {
+  resultsEl.innerHTML = '';
+  if (!val.trim()) {
+    sectionTitleEl.style.display = 'none';
+    return;
+  }
+  const matches = lookup(val);
+  if (!matches) {
+    sectionTitleEl.style.display = 'block';
+    sectionTitleEl.textContent = `"${val.trim()}" — 未找到對應字`;
+    const msg = document.createElement('div');
+    msg.className = 'no-result';
+    msg.innerHTML = `<div class="big">🈚</div><p>請確認粵拼拼寫是否正確</p>`;
+    resultsEl.appendChild(msg);
+    return;
+  }
+  sectionTitleEl.style.display = 'block';
+  sectionTitleEl.textContent = `"${stripTone(val)}" — ${matches.length} 個結果`;
+  matches.forEach(([char, cj]) => {
+    resultsEl.appendChild(buildCard(char, cj));
+  });
+}
+
+input.addEventListener('input', () => render(input.value));
+</script>
+</body>
+</html>
